@@ -52,6 +52,7 @@ for species in primary:
     #as the species is on the leftside column of the dataframe. Heading = species. 
     foodwebData.insert(loc = all_species.index(species)+1, column = species,  value = column_values)
 
+
 for x in foodwebData.index:
     for y in range(1, len(foodwebData.columns)):
         if x + 1 == y and foodwebData.columns[y] not in primary:
@@ -61,13 +62,12 @@ foodwebData.drop(columns=foodwebData.columns[0], axis=1, inplace=True)
 foodwebData = foodwebData.T
 transformedArray = foodwebData.to_numpy()
 
-#plt.show()
 augment = []
 for x in range(len(transformedArray)):
     if all_species[x] in primary:  
         augment.append(1)
     else:
         augment.append(-1)
-print(augment)
 
 trophic_levels = np.linalg.solve(transformedArray, augment)
+print(trophic_levels)
