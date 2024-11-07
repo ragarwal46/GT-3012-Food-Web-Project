@@ -58,9 +58,16 @@ for x in foodwebData.index:
             foodwebData.loc[x, foodwebData.columns[y]] -= 1
 
 foodwebData.drop(columns=foodwebData.columns[0], axis=1, inplace=True)
-foodwebData=foodwebData.T
+foodwebData = foodwebData.T
 transformedArray = foodwebData.to_numpy()
 
 #plt.show()
-x = np.linalg.solve(transformedArray, np.array([1 for i in range(len(transformedArray))]))
-print(np.dot(transformedArray, x))
+augment = []
+for x in range(len(transformedArray)):
+    if all_species[x] in primary:  
+        augment.append(1)
+    else:
+        augment.append(-1)
+print(augment)
+
+trophic_levels = np.linalg.solve(transformedArray, augment)
