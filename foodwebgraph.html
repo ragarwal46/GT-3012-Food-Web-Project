@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "Infauna", "label": "Infauna", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bivalves", "label": "Bivalves", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Catfish", "label": "Catfish", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Crayfish", "label": "Crayfish", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Fat Sleepers", "label": "Fat Sleepers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Flatfish", "label": "Flatfish", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Gastropods", "label": "Gastropods", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Gobies", "label": "Gobies", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Halfbeaks", "label": "Halfbeaks", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Herrings", "label": "Herrings", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Jacks", "label": "Jacks", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mexican mojarras", "label": "Mexican mojarras", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mojarras", "label": "Mojarras", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mollies", "label": "Mollies", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mullets", "label": "Mullets", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Needlefish", "label": "Needlefish", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pinfish", "label": "Pinfish", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Polychaetes", "label": "Polychaetes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Shrimp", "label": "Shrimp", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Snooks", "label": "Snooks", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Swimming crabs", "label": "Swimming crabs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Toadfish", "label": "Toadfish", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Zooplankton", "label": "Zooplankton", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Croakers", "label": "Croakers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Rays", "label": "Rays", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Phytoplankton", "label": "Phytoplankton", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wigeongrass", "label": "Wigeongrass", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Snappers", "label": "Snappers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Sea mammals", "label": "Sea mammals", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Detritus", "label": "Detritus", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Infauna", "to": "Bivalves", "width": 0.007}, {"arrows": "to", "from": "Infauna", "to": "Catfish", "width": 0.056}, {"arrows": "to", "from": "Infauna", "to": "Crayfish", "width": 0.124}, {"arrows": "to", "from": "Infauna", "to": "Fat Sleepers", "width": 0.404}, {"arrows": "to", "from": "Infauna", "to": "Flatfish", "width": 0.48}, {"arrows": "to", "from": "Infauna", "to": "Gastropods", "width": 0.065}, {"arrows": "to", "from": "Infauna", "to": "Gobies", "width": 0.47}, {"arrows": "to", "from": "Infauna", "to": "Halfbeaks", "width": 0.125}, {"arrows": "to", "from": "Infauna", "to": "Herrings", "width": 0.07}, {"arrows": "to", "from": "Infauna", "to": "Jacks", "width": 0.364}, {"arrows": "to", "from": "Infauna", "to": "Mexican mojarras", "width": 0.111}, {"arrows": "to", "from": "Infauna", "to": "Mojarras", "width": 0.017}, {"arrows": "to", "from": "Infauna", "to": "Mollies", "width": 0.223}, {"arrows": "to", "from": "Infauna", "to": "Mullets", "width": 0.085}, {"arrows": "to", "from": "Infauna", "to": "Needlefish", "width": 0.027}, {"arrows": "to", "from": "Infauna", "to": "Pinfish", "width": 0.293}, {"arrows": "to", "from": "Infauna", "to": "Polychaetes", "width": 0.03}, {"arrows": "to", "from": "Infauna", "to": "Shrimp", "width": 0.023}, {"arrows": "to", "from": "Infauna", "to": "Snooks", "width": 0.015}, {"arrows": "to", "from": "Infauna", "to": "Swimming crabs", "width": 0.3}, {"arrows": "to", "from": "Infauna", "to": "Toadfish", "width": 0.459}, {"arrows": "to", "from": "Infauna", "to": "Zooplankton", "width": 0.004}, {"arrows": "to", "from": "Bivalves", "to": "Catfish", "width": 0.031}, {"arrows": "to", "from": "Bivalves", "to": "Croakers", "width": 0.136}, {"arrows": "to", "from": "Bivalves", "to": "Flatfish", "width": 0.027}, {"arrows": "to", "from": "Bivalves", "to": "Gastropods", "width": 0.104}, {"arrows": "to", "from": "Bivalves", "to": "Gobies", "width": 0.065}, {"arrows": "to", "from": "Bivalves", "to": "Jacks", "width": 0.082}, {"arrows": "to", "from": "Bivalves", "to": "Pinfish", "width": 0.1}, {"arrows": "to", "from": "Bivalves", "to": "Rays", "width": 0.029}, {"arrows": "to", "from": "Bivalves", "to": "Toadfish", "width": 0.052}, {"arrows": "to", "from": "Phytoplankton", "to": "Bivalves", "width": 0.335}, {"arrows": "to", "from": "Phytoplankton", "to": "Gastropods", "width": 0.231}, {"arrows": "to", "from": "Phytoplankton", "to": "Herrings", "width": 0.222}, {"arrows": "to", "from": "Phytoplankton", "to": "Infauna", "width": 0.44}, {"arrows": "to", "from": "Phytoplankton", "to": "Mexican mojarras", "width": 0.008}, {"arrows": "to", "from": "Phytoplankton", "to": "Mojarras", "width": 0.289}, {"arrows": "to", "from": "Phytoplankton", "to": "Mollies", "width": 0.236}, {"arrows": "to", "from": "Phytoplankton", "to": "Mullets", "width": 0.329}, {"arrows": "to", "from": "Phytoplankton", "to": "Pinfish", "width": 0.179}, {"arrows": "to", "from": "Phytoplankton", "to": "Polychaetes", "width": 0.151}, {"arrows": "to", "from": "Phytoplankton", "to": "Shrimp", "width": 0.196}, {"arrows": "to", "from": "Phytoplankton", "to": "Toadfish", "width": 0.21}, {"arrows": "to", "from": "Phytoplankton", "to": "Zooplankton", "width": 0.991}, {"arrows": "to", "from": "Wigeongrass", "to": "Bivalves", "width": 0.268}, {"arrows": "to", "from": "Wigeongrass", "to": "Catfish", "width": 0.545}, {"arrows": "to", "from": "Wigeongrass", "to": "Crayfish", "width": 0.494}, {"arrows": "to", "from": "Wigeongrass", "to": "Fat Sleepers", "width": 0.196}, {"arrows": "to", "from": "Wigeongrass", "to": "Flatfish", "width": 0.151}, {"arrows": "to", "from": "Wigeongrass", "to": "Gastropods", "width": 0.591}, {"arrows": "to", "from": "Wigeongrass", "to": "Gobies", "width": 0.031}, {"arrows": "to", "from": "Wigeongrass", "to": "Halfbeaks", "width": 0.548}, {"arrows": "to", "from": "Wigeongrass", "to": "Herrings", "width": 0.236}, {"arrows": "to", "from": "Wigeongrass", "to": "Infauna", "width": 0.123}, {"arrows": "to", "from": "Wigeongrass", "to": "Mexican mojarras", "width": 0.216}, {"arrows": "to", "from": "Wigeongrass", "to": "Mojarras", "width": 0.316}, {"arrows": "to", "from": "Wigeongrass", "to": "Mollies", "width": 0.189}, {"arrows": "to", "from": "Wigeongrass", "to": "Mullets", "width": 0.174}, {"arrows": "to", "from": "Wigeongrass", "to": "Needlefish", "width": 0.122}, {"arrows": "to", "from": "Wigeongrass", "to": "Polychaetes", "width": 0.405}, {"arrows": "to", "from": "Wigeongrass", "to": "Rays", "width": 0.236}, {"arrows": "to", "from": "Wigeongrass", "to": "Shrimp", "width": 0.393}, {"arrows": "to", "from": "Wigeongrass", "to": "Snappers", "width": 0.099}, {"arrows": "to", "from": "Wigeongrass", "to": "Swimming crabs", "width": 0.366}, {"arrows": "to", "from": "Wigeongrass", "to": "Toadfish", "width": 0.027}, {"arrows": "to", "from": "Zooplankton", "to": "Bivalves", "width": 0.39}, {"arrows": "to", "from": "Zooplankton", "to": "Catfish", "width": 0.081}, {"arrows": "to", "from": "Zooplankton", "to": "Crayfish", "width": 0.147}, {"arrows": "to", "from": "Zooplankton", "to": "Fat Sleepers", "width": 0.171}, {"arrows": "to", "from": "Zooplankton", "to": "Flatfish", "width": 0.038}, {"arrows": "to", "from": "Zooplankton", "to": "Gastropods", "width": 0.004}, {"arrows": "to", "from": "Zooplankton", "to": "Gobies", "width": 0.328}, {"arrows": "to", "from": "Zooplankton", "to": "Halfbeaks", "width": 0.296}, {"arrows": "to", "from": "Zooplankton", "to": "Herrings", "width": 0.462}, {"arrows": "to", "from": "Zooplankton", "to": "Infauna", "width": 0.357}, {"arrows": "to", "from": "Zooplankton", "to": "Mexican mojarras", "width": 0.008}, {"arrows": "to", "from": "Zooplankton", "to": "Mojarras", "width": 0.367}, {"arrows": "to", "from": "Zooplankton", "to": "Mollies", "width": 0.24}, {"arrows": "to", "from": "Zooplankton", "to": "Mullets", "width": 0.082}, {"arrows": "to", "from": "Zooplankton", "to": "Pinfish", "width": 0.203}, {"arrows": "to", "from": "Zooplankton", "to": "Polychaetes", "width": 0.12}, {"arrows": "to", "from": "Zooplankton", "to": "Shrimp", "width": 0.054}, {"arrows": "to", "from": "Catfish", "to": "Croakers", "width": 0.105}, {"arrows": "to", "from": "Catfish", "to": "Jacks", "width": 0.025}, {"arrows": "to", "from": "Catfish", "to": "Mexican mojarras", "width": 0.133}, {"arrows": "to", "from": "Catfish", "to": "Needlefish", "width": 0.01}, {"arrows": "to", "from": "Catfish", "to": "Rays", "width": 0.2}, {"arrows": "to", "from": "Catfish", "to": "Sea mammals", "width": 0.35}, {"arrows": "to", "from": "Catfish", "to": "Snooks", "width": 0.358}, {"arrows": "to", "from": "Catfish", "to": "Toadfish", "width": 0.108}, {"arrows": "to", "from": "Flatfish", "to": "Catfish", "width": 0.001}, {"arrows": "to", "from": "Flatfish", "to": "Croakers", "width": 0.011}, {"arrows": "to", "from": "Flatfish", "to": "Needlefish", "width": 0.038}, {"arrows": "to", "from": "Flatfish", "to": "Rays", "width": 0.017}, {"arrows": "to", "from": "Flatfish", "to": "Snappers", "width": 0.026}, {"arrows": "to", "from": "Flatfish", "to": "Snooks", "width": 0.009}, {"arrows": "to", "from": "Flatfish", "to": "Toadfish", "width": 0.021}, {"arrows": "to", "from": "Gobies", "to": "Catfish", "width": 0.003}, {"arrows": "to", "from": "Gobies", "to": "Croakers", "width": 0.009}, {"arrows": "to", "from": "Gobies", "to": "Flatfish", "width": 0.037}, {"arrows": "to", "from": "Gobies", "to": "Halfbeaks", "width": 0.004}, {"arrows": "to", "from": "Gobies", "to": "Jacks", "width": 0.079}, {"arrows": "to", "from": "Gobies", "to": "Pinfish", "width": 0.098}, {"arrows": "to", "from": "Gobies", "to": "Rays", "width": 0.012}, {"arrows": "to", "from": "Gobies", "to": "Snappers", "width": 0.344}, {"arrows": "to", "from": "Gobies", "to": "Snooks", "width": 0.008}, {"arrows": "to", "from": "Halfbeaks", "to": "Catfish", "width": 0.004}, {"arrows": "to", "from": "Halfbeaks", "to": "Croakers", "width": 0.007}, {"arrows": "to", "from": "Halfbeaks", "to": "Needlefish", "width": 0.092}, {"arrows": "to", "from": "Herrings", "to": "Catfish", "width": 0.003}, {"arrows": "to", "from": "Herrings", "to": "Halfbeaks", "width": 0.009}, {"arrows": "to", "from": "Herrings", "to": "Jacks", "width": 0.045}, {"arrows": "to", "from": "Herrings", "to": "Needlefish", "width": 0.042}, {"arrows": "to", "from": "Herrings", "to": "Sea mammals", "width": 0.268}, {"arrows": "to", "from": "Herrings", "to": "Snappers", "width": 0.138}, {"arrows": "to", "from": "Herrings", "to": "Snooks", "width": 0.027}, {"arrows": "to", "from": "Herrings", "to": "Swimming crabs", "width": 0.027}, {"arrows": "to", "from": "Mojarras", "to": "Catfish", "width": 0.034}, {"arrows": "to", "from": "Mojarras", "to": "Croakers", "width": 0.166}, {"arrows": "to", "from": "Mojarras", "to": "Fat Sleepers", "width": 0.12}, {"arrows": "to", "from": "Mojarras", "to": "Flatfish", "width": 0.119}, {"arrows": "to", "from": "Mojarras", "to": "Gobies", "width": 0.093}, {"arrows": "to", "from": "Mojarras", "to": "Halfbeaks", "width": 0.016}, {"arrows": "to", "from": "Mojarras", "to": "Jacks", "width": 0.186}, {"arrows": "to", "from": "Mojarras", "to": "Mexican mojarras", "width": 0.161}, {"arrows": "to", "from": "Mojarras", "to": "Mollies", "width": 0.019}, {"arrows": "to", "from": "Mojarras", "to": "Needlefish", "width": 0.471}, {"arrows": "to", "from": "Mojarras", "to": "Sea mammals", "width": 0.084}, {"arrows": "to", "from": "Mojarras", "to": "Snappers", "width": 0.129}, {"arrows": "to", "from": "Mojarras", "to": "Snooks", "width": 0.283}, {"arrows": "to", "from": "Mojarras", "to": "Swimming crabs", "width": 0.003}, {"arrows": "to", "from": "Mojarras", "to": "Toadfish", "width": 0.08}, {"arrows": "to", "from": "Mojarras", "to": "Zooplankton", "width": 0.001}, {"arrows": "to", "from": "Polychaetes", "to": "Catfish", "width": 0.216}, {"arrows": "to", "from": "Polychaetes", "to": "Croakers", "width": 0.337}, {"arrows": "to", "from": "Polychaetes", "to": "Flatfish", "width": 0.136}, {"arrows": "to", "from": "Polychaetes", "to": "Mullets", "width": 0.072}, {"arrows": "to", "from": "Polychaetes", "to": "Rays", "width": 0.098}, {"arrows": "to", "from": "Shrimp", "to": "Catfish", "width": 0.013}, {"arrows": "to", "from": "Shrimp", "to": "Croakers", "width": 0.153}, {"arrows": "to", "from": "Shrimp", "to": "Jacks", "width": 0.108}, {"arrows": "to", "from": "Shrimp", "to": "Rays", "width": 0.26}, {"arrows": "to", "from": "Shrimp", "to": "Sea mammals", "width": 0.141}, {"arrows": "to", "from": "Shrimp", "to": "Snappers", "width": 0.121}, {"arrows": "to", "from": "Shrimp", "to": "Snooks", "width": 0.111}, {"arrows": "to", "from": "Shrimp", "to": "Swimming crabs", "width": 0.019}, {"arrows": "to", "from": "Shrimp", "to": "Toadfish", "width": 0.022}, {"arrows": "to", "from": "Snooks", "to": "Catfish", "width": 0.003}, {"arrows": "to", "from": "Snooks", "to": "Jacks", "width": 0.029}, {"arrows": "to", "from": "Snooks", "to": "Needlefish", "width": 0.01}, {"arrows": "to", "from": "Snooks", "to": "Snappers", "width": 0.007}, {"arrows": "to", "from": "Swimming crabs", "to": "Catfish", "width": 0.001}, {"arrows": "to", "from": "Swimming crabs", "to": "Croakers", "width": 0.011}, {"arrows": "to", "from": "Swimming crabs", "to": "Flatfish", "width": 0.011}, {"arrows": "to", "from": "Swimming crabs", "to": "Gobies", "width": 0.004}, {"arrows": "to", "from": "Swimming crabs", "to": "Jacks", "width": 0.022}, {"arrows": "to", "from": "Swimming crabs", "to": "Mexican mojarras", "width": 0.019}, {"arrows": "to", "from": "Swimming crabs", "to": "Rays", "width": 0.026}, {"arrows": "to", "from": "Swimming crabs", "to": "Snooks", "width": 0.026}, {"arrows": "to", "from": "Detritus", "to": "Crayfish", "width": 0.235}, {"arrows": "to", "from": "Detritus", "to": "Croakers", "width": 0.056}, {"arrows": "to", "from": "Detritus", "to": "Infauna", "width": 0.064}, {"arrows": "to", "from": "Detritus", "to": "Jacks", "width": 0.045}, {"arrows": "to", "from": "Detritus", "to": "Mexican mojarras", "width": 0.309}, {"arrows": "to", "from": "Detritus", "to": "Mojarras", "width": 0.011}, {"arrows": "to", "from": "Detritus", "to": "Mollies", "width": 0.06}, {"arrows": "to", "from": "Detritus", "to": "Mullets", "width": 0.243}, {"arrows": "to", "from": "Detritus", "to": "Polychaetes", "width": 0.271}, {"arrows": "to", "from": "Detritus", "to": "Shrimp", "width": 0.311}, {"arrows": "to", "from": "Detritus", "to": "Swimming crabs", "width": 0.226}, {"arrows": "to", "from": "Crayfish", "to": "Mexican mojarras", "width": 0.006}, {"arrows": "to", "from": "Crayfish", "to": "Snooks", "width": 0.012}, {"arrows": "to", "from": "Crayfish", "to": "Toadfish", "width": 0.013}, {"arrows": "to", "from": "Croakers", "to": "Mexican mojarras", "width": 0.029}, {"arrows": "to", "from": "Croakers", "to": "Needlefish", "width": 0.034}, {"arrows": "to", "from": "Croakers", "to": "Pinfish", "width": 0.011}, {"arrows": "to", "from": "Croakers", "to": "Sea mammals", "width": 0.129}, {"arrows": "to", "from": "Croakers", "to": "Snappers", "width": 0.026}, {"arrows": "to", "from": "Croakers", "to": "Snooks", "width": 0.029}, {"arrows": "to", "from": "Needlefish", "to": "Croakers", "width": 0.007}, {"arrows": "to", "from": "Snappers", "to": "Croakers", "width": 0.001}, {"arrows": "to", "from": "Snappers", "to": "Snooks", "width": 0.003}, {"arrows": "to", "from": "Gastropods", "to": "Fat Sleepers", "width": 0.109}, {"arrows": "to", "from": "Gastropods", "to": "Gobies", "width": 0.009}, {"arrows": "to", "from": "Gastropods", "to": "Jacks", "width": 0.005}, {"arrows": "to", "from": "Gastropods", "to": "Mullets", "width": 0.014}, {"arrows": "to", "from": "Gastropods", "to": "Pinfish", "width": 0.081}, {"arrows": "to", "from": "Gastropods", "to": "Rays", "width": 0.008}, {"arrows": "to", "from": "Gastropods", "to": "Swimming crabs", "width": 0.014}, {"arrows": "to", "from": "Gastropods", "to": "Toadfish", "width": 0.008}, {"arrows": "to", "from": "Fat Sleepers", "to": "Flatfish", "width": 0.001}, {"arrows": "to", "from": "Fat Sleepers", "to": "Gobies", "width": 0.001}, {"arrows": "to", "from": "Fat Sleepers", "to": "Mollies", "width": 0.03}, {"arrows": "to", "from": "Fat Sleepers", "to": "Rays", "width": 0.009}, {"arrows": "to", "from": "Mollies", "to": "Halfbeaks", "width": 0.002}, {"arrows": "to", "from": "Mollies", "to": "Herrings", "width": 0.001}, {"arrows": "to", "from": "Mollies", "to": "Needlefish", "width": 0.004}, {"arrows": "to", "from": "Mollies", "to": "Rays", "width": 0.009}, {"arrows": "to", "from": "Mollies", "to": "Snappers", "width": 0.026}, {"arrows": "to", "from": "Mollies", "to": "Snooks", "width": 0.002}, {"arrows": "to", "from": "Jacks", "to": "Herrings", "width": 0.001}, {"arrows": "to", "from": "Jacks", "to": "Pinfish", "width": 0.014}, {"arrows": "to", "from": "Jacks", "to": "Sea mammals", "width": 0.027}, {"arrows": "to", "from": "Jacks", "to": "Snappers", "width": 0.007}, {"arrows": "to", "from": "Jacks", "to": "Snooks", "width": 0.005}, {"arrows": "to", "from": "Pinfish", "to": "Herrings", "width": 0.001}, {"arrows": "to", "from": "Pinfish", "to": "Snooks", "width": 0.011}, {"arrows": "to", "from": "Mullets", "to": "Jacks", "width": 0.011}, {"arrows": "to", "from": "Mullets", "to": "Needlefish", "width": 0.007}, {"arrows": "to", "from": "Mullets", "to": "Pinfish", "width": 0.022}, {"arrows": "to", "from": "Mullets", "to": "Rays", "width": 0.006}, {"arrows": "to", "from": "Mullets", "to": "Snooks", "width": 0.006}, {"arrows": "to", "from": "Mullets", "to": "Swimming crabs", "width": 0.011}, {"arrows": "to", "from": "Mexican mojarras", "to": "Needlefish", "width": 0.128}, {"arrows": "to", "from": "Mexican mojarras", "to": "Snappers", "width": 0.077}, {"arrows": "to", "from": "Mexican mojarras", "to": "Snooks", "width": 0.093}, {"arrows": "to", "from": "Toadfish", "to": "Needlefish", "width": 0.014}, {"arrows": "to", "from": "Toadfish", "to": "Rays", "width": 0.086}, {"arrows": "to", "from": "Sea mammals", "to": "Rays", "width": 0.001}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": false,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
