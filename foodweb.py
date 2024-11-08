@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from pyvis.network import Network
 
 #Reads the data in 
-foodwebData = pd.read_csv('GulfoMexico.csv')
+foodwebData = pd.read_csv('brazil.csv')
 columns = list(foodwebData.columns)
 all_species = []
 
@@ -38,6 +38,7 @@ primary = []
 for species in all_species:
     if species not in columns:
         primary.append(species)
+
         
 #For each primary species, create a list of zeroes with a 1 entry at the index location of the primary species
 #in the left side column
@@ -62,6 +63,8 @@ foodwebData.drop(columns=foodwebData.columns[0], axis=1, inplace=True)
 foodwebData = foodwebData.T
 transformedArray = foodwebData.to_numpy()
 
+print(len(all_species))
+print(len(transformedArray))
 augment = []
 for x in range(len(transformedArray)):
     if all_species[x] in primary:  

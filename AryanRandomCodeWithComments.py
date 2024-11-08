@@ -25,7 +25,7 @@ def center_increasing_sequences(lst):
 
 
 #Reads the data in 
-foodwebData = pd.read_csv('GulfoMexico.csv')
+foodwebData = pd.read_csv('gulfOfMexico.csv')
 columns = list(foodwebData.columns)
 all_species = []
 
@@ -38,7 +38,6 @@ for y in range(1, len(columns)):
     for x in range(len(foodwebArray)):
         if(foodwebArray[x][y] != 0 and foodwebArray[x][0] != columns[y]):
             foodwebGraph.add_edge(foodwebArray[x][0], columns[y], weight=foodwebArray[x][y])
-            visualizedGraph.add_edge(foodwebArray[x][0], columns[y], weight=foodwebArray[x][y])
 
 #Finds entries in first column on left
 for row in foodwebArray:
@@ -69,15 +68,12 @@ for x in foodwebData.index:
         if x + 1 == y and foodwebData.columns[y] not in primary:
             foodwebData.loc[x, foodwebData.columns[y]] -= 1
 
+
 foodwebData.drop(columns=foodwebData.columns[0], axis=1, inplace=True)
 foodwebData = foodwebData.T
 transformedArray = foodwebData.to_numpy()
 
 augment = []
-
-# for i in range(len(transformedArray)):
-#     if transformedArray[0][i] not in all_species:
-#         print(transformedArray[0][i])
 
 for x in range(len(transformedArray)):
     if all_species[x] in primary:  
@@ -86,6 +82,7 @@ for x in range(len(transformedArray)):
         augment.append(-1)
 
 trophic_levels = np.linalg.solve(transformedArray, augment)
+print(trophic_levels)
 
 # Given lists
 node_names = all_species
