@@ -1,5 +1,7 @@
 # Trophic Centrality
 
+#This code below reads from the file and finds trophic levels for our creatures
+
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -55,30 +57,41 @@ for x in range(len(transformedArray)):
 
 trophic_levels = np.linalg.solve(transformedArray, augment)
 
-# Dictionary for trophic levels
+
+### Beginning of Centrality Calculations
+
+#Here we initialize a dictionary for trophic levels
 trophic_level_dict = {species: level for species, level in zip(all_species, trophic_levels)}
 
-# Dictionary for centrality measure
+#Here we initalize a dictionary where I'll store all the centrality scores for later.
 centrality_measure = {species: 0 for species in all_species}
 
 for prey in reversedfoodWeb.nodes:
+
+    #Creates a list of all the species that eat the one we are iterating over
     predators = list(reversedfoodWeb.predecessors(prey))
-    
+
+    #If it doesn't have any predators, we can skip it
     if not predators:
         continue  
     
-
+    #For all the predators of the animal we are iterating over, we are summing the weights of the predator-prey interaction for our
+    #running total
     total_weight = sum(reversedfoodWeb[predator][prey]['weight'] for predator in predators)
     
-    max_trophic_predator = max(predators, key=lambda predator: trophic_level_dict[predator])
-    max_trophic_level = trophic_level_dict[max_trophic_predator]
 
 
     prey_centrality = 0
     for predator in predators:
         original_weight = reversedfoodWeb[predator][prey]['weight']
-        trophic_difference = max_trophic_level - trophic_level_dict[predator]
+
+        trophic_difference = trophic_level_dict[prey] - trophic_level_dict[predator]
+
+        #Adjust the weight using the 10% rule due to trophic differences
+
         adjusted_weight = original_weight * (10 ** trophic_difference)
+
+        #To normalize the weight in order to scale the contributions accordingly, we divide the adjusted weight by the total weight.
         
         normalized_weight = adjusted_weight / total_weight
         prey_centrality += normalized_weight
@@ -87,6 +100,36 @@ for prey in reversedfoodWeb.nodes:
     for predator in predators:
         centrality_measure[predator] += prey_centrality
 
-keystone_species = max(centrality_measure, key=centrality_measure.get)
+#Now we do the same thing for the predators
+
+for predator in foodwebGraph.nodes:
+
+    #We use foodwebgraph instead of the reversed version, that way we can get the prey from the predators
+
+    preys = list(foodwebGraph.predecessors(predator))
+
+    #If the animal has no prey, we can skip this step.
+
+    if not preys:
+        continue
+
+    for prey in preys:
+        total_predation = sum(foodwebGraph[prey][pred]['weight'] for pred in foodwebGraph.successors(prey))
+        if total_predation == 0:
+            continue
+
+        #Adjust prey's contribution based on the trophic level difference
+        #Same idea as above with the predators
+
+        trophic_difference = trophic_level_dict[predator] - trophic_level_dict[prey]
+
+        adjusted_weight = (foodwebGraph[prey][predator]['weight'] / total_predation) * (10 ** (-trophic_difference))
+
+        centrality_measure[predator] += adjusted_weight
+
+#Sort the values so we can get the most important species, and keep 3 of the most important as our contenders
+
+keystone_species = sorted(centrality_measure, key=centrality_measure.get, reverse=True)[:3]
+
 print("Keystone species:", keystone_species)
 #print("Trophic centrality scores:", centrality_measure)
