@@ -101,7 +101,7 @@ for prey in reversedfoodWeb.nodes:
     prey_centrality = 0
     for predator in predators:
         original_weight = reversedfoodWeb[predator][prey]['weight']
-
+#
         trophic_difference = trophic_level_dict[prey] - trophic_level_dict[predator]
 
         #Adjust the weight using the 10% rule due to trophic differences
