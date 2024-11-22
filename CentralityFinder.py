@@ -4,7 +4,10 @@ import pandas as pd
 import numpy as np
 
 
-#This code below reads from the file and finds trophic levels for our creatures. The file is forma
+#This code below reads from the file and finds trophic levels for our creatures. 
+
+#Format of the file is as follows: Look at a specific column. The topmost entry of the column is species X. For every numerical entry below that, the number represents what percent 
+#the row species comprises of the column species diet
 foodwebData = pd.read_csv('GulfoMexico.csv') #Saved as a pandas Dataframe
 
 columns = list(foodwebData.columns)
@@ -13,22 +16,28 @@ all_species = []
 foodwebArray = foodwebData.to_numpy()
 foodwebGraph = nx.DiGraph()
 
-#Adds all edges from the dataframe. 
+#Adds all edges from the dataframe, with specified weights.   
 for y in range(1, len(columns)):
     for x in range(len(foodwebArray)):
         if foodwebArray[x][y] != 0 and foodwebArray[x][0] != columns[y]:
             foodwebGraph.add_edge(foodwebArray[x][0], columns[y], weight=foodwebArray[x][y])
 
+#Defines a reversed food web, useful for calculating the prey species of a given species X, since a directed graph was created.
 reversedfoodWeb = foodwebGraph.reverse()
 
+#Since some species, such as Detritus or primary producers eat nothing, these columns are not included. 
+#These columns must be found and the manually added. 
+#Finds all species
 for row in foodwebArray:
     all_species.append(row[0])
 
+#Finds all species not in columns
 primary = []
 for species in all_species:
     if species not in columns:
         primary.append(species)
 
+#
 for species in primary:
     column_values = []
     for i in range(len(all_species)):
@@ -38,6 +47,8 @@ for species in primary:
             column_values.append(0)
     foodwebData.insert(loc=all_species.index(species) + 1, column=species, value=column_values)
 
+#This manipulates the existing dataframe that we have and turns it into a matrix
+#We subtract one to convert each column into an expression of variables. 
 for x in foodwebData.index:
     for y in range(1, len(foodwebData.columns)):
         if x + 1 == y and foodwebData.columns[y] not in primary:
@@ -49,7 +60,7 @@ transformedArray = foodwebData.to_numpy()
 
 augment = []
 
-
+$
 for x in range(len(transformedArray)):
     if all_species[x] in primary:  
         augment.append(1)
