@@ -1,18 +1,19 @@
 # Trophic Centrality
-
-#This code below reads from the file and finds trophic levels for our creatures
-
 import networkx as nx
 import pandas as pd
 import numpy as np
 
-foodwebData = pd.read_csv('GulfoMexico.csv')
+
+#This code below reads from the file and finds trophic levels for our creatures. The file is forma
+foodwebData = pd.read_csv('GulfoMexico.csv') #Saved as a pandas Dataframe
+
 columns = list(foodwebData.columns)
 all_species = []
 
 foodwebArray = foodwebData.to_numpy()
 foodwebGraph = nx.DiGraph()
 
+#Adds all edges from the dataframe. 
 for y in range(1, len(columns)):
     for x in range(len(foodwebArray)):
         if foodwebArray[x][y] != 0 and foodwebArray[x][0] != columns[y]:
