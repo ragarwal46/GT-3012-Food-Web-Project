@@ -31,13 +31,13 @@ reversedfoodWeb = foodwebGraph.reverse()
 for row in foodwebArray:
     all_species.append(row[0])
 
-#Finds all species not in columns
+#Finds all species that are in rows but not in columns. These are our primary producers, or trophic level 1. 
 primary = []
 for species in all_species:
     if species not in columns:
         primary.append(species)
 
-#
+#For every s
 for species in primary:
     column_values = []
     for i in range(len(all_species)):
@@ -47,27 +47,32 @@ for species in primary:
             column_values.append(0)
     foodwebData.insert(loc=all_species.index(species) + 1, column=species, value=column_values)
 
-#This manipulates the existing dataframe that we have and turns it into a matrix
-#We subtract one to convert each column into an expression of variables. 
+#This manipulates the existing dataframe that we have and turns it into a matrix that can be row reduced
 for x in foodwebData.index:
     for y in range(1, len(foodwebData.columns)):
         if x + 1 == y and foodwebData.columns[y] not in primary:
+            #We subtract one to convert each column into an expression of trophic level relations
+            #More detail in our paper
             foodwebData.loc[x, foodwebData.columns[y]] -= 1
 
+#Drops the first column of names, so we have only numbers, and transposes the matrix. 
 foodwebData.drop(columns=foodwebData.columns[0], axis=1, inplace=True)
 foodwebData = foodwebData.T
 transformedArray = foodwebData.to_numpy()
 
 augment = []
 
-$
+#Because of the way each equation works out, for primary producers, their trophic level is one. 
+#For all other species, their linear expression modelled by matrix coefficients in their rows will sum to -1
 for x in range(len(transformedArray)):
     if all_species[x] in primary:  
         augment.append(1)
     else:
         augment.append(-1)
 
+#Row reduce and solve the matrix. This is a list that holds every trophic level for each species. 
 trophic_levels = np.linalg.solve(transformedArray, augment)
+
 
 
 ### Beginning of Centrality Calculations
